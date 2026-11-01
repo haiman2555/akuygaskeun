@@ -1,49 +1,78 @@
 # Style Guide
 
-> Status: **PLACEHOLDER** — belum diisi dari style asli.
-> Isi dokumen ini dari video referensi, screenshot penempatan, brand kit,
-> dan deskripsi Anda (Claude Code bisa melakukannya lewat `/extract-style`).
-> Setiap nilai di sini harus tercermin di `src/style/tokens.ts`.
+> Diturunkan dari `style/references/videos/Montage_Editing.mp4` dan
+> `Masukan_Ini.mp4` (2160×3820, 25 fps). Semua nilai tercermin di
+> `src/style/tokens.ts`. StyleBoard (`src/compositions/styleboard.ts`)
+> merekonstruksi adegan-adegannya untuk pembanding.
 
 ## 1. Karakter umum
-- Energi / tempo: _(mis. cepat & punchy, potongan tiap 1–2 detik)_
-- Kesan: _(mis. bersih, bold, playful, sinematik)_
+- Konten edukasi trading, talking head + scene motion graphic.
+- Tempo cepat: shot 1,6–5 detik, teks kunci muncul tepat saat kata diucapkan.
+- Bersih, kontras tinggi: teks putih bayangan lembut, satu aksen per frame (merah ATAU kuning).
 
 ## 2. Warna
-| Peran | Hex | Catatan |
+| Peran | Hex | Dipakai di |
 |---|---|---|
-| Aksen utama | `#FFD400` | highlight kata, bar lower third |
-| Aksen kedua | `#FF3D6E` | |
-| Teks | `#FFFFFF` | |
-| Latar kotak | `rgba(10,10,10,0.72)` | |
+| Merah kotak | `#C91216` | kotak highlight "Fokusmu" |
+| Merah terang | `#E80000` | garis coret, anotasi putus-putus, nilai minus |
+| Kuning | `#FDFE0C` | kata aksen ("Paham") |
+| Putih | `#FFFFFF` | semua teks utama |
+| Latar grafis | `#666666` → `#2B2B2B` → `#030303` | gradien vertikal scene grafis |
+| Kartu saldo | `#2F0000` → `#DA0001` | gradien diagonal |
 
 ## 3. Tipografi
-| Elemen | Font | Weight | Ukuran (px @1080w) | Huruf besar? |
-|---|---|---|---|---|
-| Judul | Montserrat | 900 | 112 | ya |
-| Subjudul | Inter | 700 | 56 | tidak |
-| Caption | Montserrat | 900 | 76 | ya |
-| Lower third nama | Montserrat | 800 | 54 | tidak |
+- **Gilroy** (Light / Regular / Bold / ExtraBold / Black). Pengganti gratis: **Outfit**.
+- Serif untuk judul step ("Step #2") dengan glow putih — pengganti: Noto Serif.
+- Pola khas: **tumpukan teks dengan bobot & ukuran campur**, leading rapat (0,92).
 
-Outline / shadow teks: _(mis. tanpa outline, shadow lembut)_
+| Token | px @1080w | Contoh |
+|---|---|---|
+| `xs` | 36 | "= Saldo Normal x 100" |
+| `sm` | 44 | kutipan "Resiko 100x lebih rendah…" |
+| `s` | 56 | "ruang gerak" |
+| `m` | 78 | "Bukan", "Jadi lebih mengerti" |
+| `ml` | 96 | "XAUUSD", "SL (-70 Pips)" |
+| `l` | 120 | "Fokusmu", "butuh", "Paling kecil" |
+| `xl` | 200 | "Duit" |
+| `title` | 140 | "Step #2" (serif) |
 
-## 4. Penempatan (dari screenshot)
-| Elemen | Posisi Y (px dari atas) | Rata | Catatan |
+## 4. Penempatan (kanvas 1080×1920)
+| Elemen | x | y | Rata |
 |---|---|---|---|
-| Judul | 380 | tengah | |
-| Caption bicara | 1180 | tengah | 3 kata per halaman |
-| Lower third | di atas 1440 | kiri | |
-| Logo | kiri atas | | |
+| Judul step | 125 | 165 | kiri, di atas bayangan gelap atas |
+| Teks kunci di samping kepala | 310–530 | 445–640 | kiri, mulai dari sisi kanan wajah |
+| Teks bawah (poin) | 105 | 1130 | kiri, di dada subjek |
+| Bullet di samping HP | 645 | 745 | kiri |
+| Teks di atas ikon | 540 | 470 | tengah |
 
-## 5. Gerak
-- Judul masuk: _(pop / slideUp / fade / typewriter)_, durasi ~12 frame, stagger per kata 3 frame
-- Caption: _(highlight kotak kuning pada kata aktif / box / plain)_
-- Transisi default: _(zoomPunch / whip / slide / fade / cut)_, ~10 frame
-- Reframe: _(punch-in pada kalimat penting? Ken Burns halus?)_
+## 5. Zoom
+- **Jump cut lebar ↔ rapat**: shot rapat ±1,35× (`zoom.tight`).
+- **Punch-in** saat cut ke shot rapat: frame pertama 1,15× lebih besar + blur 14 px, turun dalam 5 frame.
+- **Slow push** di scene grafis: +2,5% per detik.
+- **B-roll foto**: push 8% + rotasi 2,5° → 0, vignette.
 
-## 6. Audio
-- SFX transisi: _(whoosh? pop?)_
-- Musik: volume relatif _(mis. 20–25%)_ di bawah suara
+## 6. Cut & transisi
+| Nama | Durasi | Dipakai |
+|---|---|---|
+| `cut` | 0 | default antar shot talking head (+ punch-in) |
+| `dip` | 6 fr | antar scene grafis (HP besar → HP + bullet) |
+| `panDown` | 10 fr | ikon → ikon, dengan garis putus-putus penghubung |
+| `slideLeft` | 6 fr | ganti isi (kartu Standard → Cent) |
 
-## 7. Larangan / catatan
-- _(mis. jangan pakai lebih dari 2 warna aksen dalam satu frame)_
+## 7. Animasi teks & grafis (frame @25 fps)
+| Gaya | Detail |
+|---|---|
+| `fade` (default) | 4 fr fade + blur 12 px + naik 14 px, jeda antar baris 5 fr |
+| `flicker` | kedip 6 fr, lalu kotak merah wipe dari kiri 7 fr (mulai +8 fr) |
+| `strike` | garis coret merah tergambar 6 fr (mulai +10 fr) |
+| `type` | ketik per huruf, 20 huruf/detik |
+| `words` | per kata, jeda 4 fr, fade + blur |
+| Ikon | terbang dari bawah, rotasi −18° → 0, blur, memantul, ±18 fr |
+| Anotasi | garis merah putus-putus tergambar 10 fr |
+| Angka | bergulir 8 fr ($1000 → $999) |
+
+## 8. Belum ada di referensi / perlu konfirmasi
+- File font Gilroy (bila punya lisensi) → `public/brand/fonts/`, set `USE_GILROY = true`.
+- Aset ikon asli (otak "!?", lampu, papan gabus) → `public/assets/`.
+- SFX (whoosh, pop) & musik: belum terdengar dianalisis.
+- Caption per kata: tidak dipakai di referensi; komponen tetap tersedia.

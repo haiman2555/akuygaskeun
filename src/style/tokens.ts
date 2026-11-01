@@ -1,76 +1,115 @@
 /**
- * STYLE TOKENS — satu-satunya sumber kebenaran untuk "look" animasi.
+ * STYLE TOKENS — diturunkan dari video referensi pengguna
+ * (style/references/videos/Montage_Editing.mp4 & Masukan_Ini.mp4).
+ * Detail pengukuran ada di style/STYLE.md.
  *
- * Semua komponen membaca nilai dari sini. Untuk mengganti style seluruh
- * video, ubah file ini (dan style/STYLE.md), bukan komponen satu per satu.
- *
- * Nilai di bawah masih PLACEHOLDER. Ganti dengan style asli Anda
- * (lihat style/STYLE.md dan perintah /extract-style di Claude Code).
+ * Semua komponen membaca nilai dari sini. Ubah di sini untuk mengubah style
+ * semua video; jangan hardcode warna/ukuran/durasi di komponen atau project.
  */
 
 export const FORMAT = {
   width: 1080,
   height: 1920,
-  fps: 30,
+  fps: 25, // referensi diekspor 25 fps
 } as const;
 
+/* ------------------------------------------------------------------ warna */
 export const colors = {
-  primary: "#FFD400", // warna aksen utama (highlight kata, garis, bar)
-  secondary: "#FF3D6E",
-  text: "#FFFFFF",
-  textOnPrimary: "#111111",
-  shadow: "rgba(0,0,0,0.55)",
-  boxBg: "rgba(10,10,10,0.72)", // latar kotak lower third / caption box
+  white: "#FFFFFF",
+  red: "#C91216", // kotak highlight ("Fokusmu")
+  redBright: "#E80000", // garis coret, anotasi putus-putus
+  yellow: "#FDFE0C", // kata aksen ("Paham")
+  black: "#030303",
+  // latar scene grafis: abu atas -> hitam bawah
+  graphicBgTop: "#666666",
+  graphicBgMid: "#2B2B2B",
+  graphicBgBottom: "#030303",
+  // kartu saldo
+  cardFrom: "#2F0000",
+  cardTo: "#DA0001",
+  phoneScreen: "#3A3A3A",
+  textShadow: "rgba(0,0,0,0.55)",
 } as const;
 
+/* ------------------------------------------------------------------ font */
 export const fonts = {
-  // Nama family; dimuat di src/style/fonts.ts
-  heading: "Montserrat",
-  body: "Inter",
+  // Gilroy dipakai bila filenya ada di public/brand/fonts (lihat fonts.ts),
+  // jika tidak, jatuh ke Outfit (Google Font paling mirip).
+  sans: "Gilroy, Outfit, sans-serif",
+  serif: "'Noto Serif', Georgia, serif", // judul "Step #2"
 } as const;
 
-export const type = {
-  title: { size: 112, weight: 900, lineHeight: 1.0, letterSpacing: -2, uppercase: true },
-  subtitle: { size: 56, weight: 700, lineHeight: 1.1, letterSpacing: 0, uppercase: false },
-  caption: { size: 76, weight: 900, lineHeight: 1.05, letterSpacing: -1, uppercase: true },
-  lowerThirdName: { size: 54, weight: 800, lineHeight: 1.0, letterSpacing: 0, uppercase: false },
-  lowerThirdRole: { size: 36, weight: 500, lineHeight: 1.1, letterSpacing: 1, uppercase: true },
+export const weights = {
+  light: 300,
+  regular: 400,
+  bold: 700,
+  heavy: 800,
+  black: 900,
 } as const;
 
-/** Ketebalan stroke & bayangan teks agar tetap terbaca di atas footage. */
-export const textTreatment = {
-  strokeWidth: 0, // px, 0 = tanpa outline
-  strokeColor: "#000000",
-  shadow: "0 6px 24px rgba(0,0,0,0.55)",
+/** Ukuran teks dalam px pada kanvas 1080 lebar (diukur dari referensi). */
+export const sizes = {
+  xs: 36, // "= Saldo Normal x 100"
+  sm: 44, // kutipan "Resiko 100x lebih rendah..."
+  s: 56, // "ruang gerak", "tentang ilmu market"
+  m: 78, // "Bukan", "SL (-70 Pips)", "Paham Karakteristik"
+  ml: 96, // "XAUUSD" (di atas "butuh"), "SL (-70 Pips)"
+  l: 120, // "Fokusmu", "Paling kecil", "butuh"
+  xl: 200, // "Duit"
+  title: 140, // "Step #2" (serif)
+} as const;
+export type SizeKey = keyof typeof sizes;
+
+export const text = {
+  lineHeight: 0.92, // tumpukan teks rapat
+  shadow: "0 4px 18px rgba(0,0,0,0.55)",
+  glow: "0 0 22px rgba(255,255,255,0.45)", // serif title
+  boxPadX: 0.28, // em, padding kotak merah
+  boxPadY: 0.1,
+  strikeThickness: 0.07, // em, tebal garis coret
 } as const;
 
-/** Durasi standar (dalam frame @30fps). */
-export const timing = {
-  textIn: 12,
-  textOut: 8,
-  transition: 10,
-  lowerThirdHold: 90,
-  wordStagger: 3, // jeda antar kata saat animasi masuk per kata
+/* ------------------------------------------------------------------ zoom */
+export const zoom = {
+  tight: 1.35, // shot rapat vs lebar pada jump cut
+  punchOvershoot: 1.15, // frame pertama setelah cut lebih besar sekian kali
+  punchFrames: 5, // waktu turun ke ukuran akhir
+  punchBlur: 14, // px blur di frame pertama punch
+  pushPerSecond: 0.025, // slow push: +2.5% skala per detik
+  brollPush: 0.08, // total push untuk B-roll foto
+  brollRotate: 2.5, // derajat rotasi pelan B-roll
 } as const;
 
-/** Konfigurasi spring Remotion untuk karakter gerak. */
+/* ------------------------------------------------------------------ cuts */
+export const cuts = {
+  dipFrames: 6, // dip to black total (keluar + masuk)
+  panFrames: 10, // pan vertikal antar scene grafis
+  slideFrames: 6, // geser horizontal
+  panBlur: 10,
+} as const;
+
+/* ------------------------------------------------------------------ motion (frame @25fps) */
+export const motion = {
+  lineIn: 4, // fade+blur per baris teks
+  lineBlur: 12,
+  lineStagger: 5, // jeda antar baris dalam satu tumpukan
+  wordStagger: 4, // muncul per kata
+  flickerFrames: 6, // kedip sebelum teks tegas
+  boxWipeDelay: 8, // kotak merah mulai wipe setelah teks muncul
+  boxWipeFrames: 7,
+  strikeDelay: 10, // garis coret mulai setelah kata muncul
+  strikeFrames: 6,
+  typeCharsPerSecond: 20, // ketik per huruf
+  textOut: 4, // fade keluar di akhir overlay
+  iconFrames: 18, // ikon terbang masuk
+  iconRotate: -18,
+  pathDrawFrames: 10, // gambar garis anotasi
+  numberRollFrames: 8,
+} as const;
+
+/** Konfigurasi spring Remotion. */
 export const springs = {
-  snappy: { damping: 14, stiffness: 180, mass: 0.6 },
-  smooth: { damping: 200, stiffness: 100, mass: 1 },
-  bouncy: { damping: 9, stiffness: 160, mass: 0.7 },
-} as const;
-
-/** Gaya default tiap elemen — pilih salah satu varian yang tersedia. */
-export const defaults = {
-  titleIn: "pop" as "pop" | "slideUp" | "fade" | "typewriter",
-  captionStyle: "highlight" as "highlight" | "box" | "plain",
-  captionWordsPerPage: 3,
-  transition: "zoomPunch" as "cut" | "fade" | "slideLeft" | "slideUp" | "wipe" | "zoomPunch" | "whip",
-  lowerThird: "bar" as "bar" | "box",
-} as const;
-
-/** Radius & spasi. */
-export const layout = {
-  radius: 18,
-  padding: 28,
+  snappy: { damping: 15, stiffness: 190, mass: 0.6 },
+  smooth: { damping: 200, stiffness: 110, mass: 1 },
+  pop: { damping: 11, stiffness: 150, mass: 0.7 },
 } as const;

@@ -15,12 +15,10 @@ import type { Edit } from "../../schema/edit";
 
 export const edit: Edit = {
   id: "$slug",
-  progressBar: false,
   clips: [
-    // { src: "footage/$slug/NAMA_FILE.mp4", in: 0, out: 4 },
+    // { kind: "video", src: "footage/$slug/NAMA_FILE.mp4", in: 0, out: 4 },
   ],
   overlays: [],
-  captions: [],
 };
 EOF
 

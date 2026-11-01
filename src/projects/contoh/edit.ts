@@ -1,53 +1,71 @@
 import type { Edit } from "../../schema/edit";
 
 /**
- * Project contoh. Taruh footage di public/footage/contoh/ lalu sesuaikan
- * nama file, titik in/out, dan reframe di bawah.
+ * Project contoh (talking head edukasi trading, gaya referensi).
+ * Taruh footage di public/footage/contoh/, jalankan `npm run probe contoh`,
+ * lalu sesuaikan nama file, in/out, dan posisi teks.
+ *
+ * Aturan jump cut: klip video tanpa `framing` otomatis selang-seling
+ * lebar -> rapat -> lebar..., dan cut ke shot rapat otomatis punch-in.
  */
 export const edit: Edit = {
   id: "contoh",
-  progressBar: true,
-  captionStyle: "highlight",
   clips: [
+    // Hook: shot lebar + judul step di atas bayangan gelap
+    { kind: "video", src: "footage/contoh/A001.mp4", in: 3.2, out: 4.8, shade: "top" },
+    // Jump cut ke rapat (punch-in otomatis)
+    { kind: "video", src: "footage/contoh/A001.mp4", in: 4.8, out: 10.2, focus: { x: 0.45, y: 0.35 } },
+    // B-roll foto dengan gerak kamera pelan, lalu dip ke grafis
+    { kind: "image", src: "assets/broll/papan.jpg", dur: 4.0, transition: "dip" },
+    // Scene grafis HP
     {
-      src: "footage/contoh/A001.mp4",
-      in: 2.0,
-      out: 6.5,
-      // Footage landscape 4K: geser fokus dari kiri ke subjek di kanan + punch-in
-      reframe: [
-        { t: 0, x: 0.35, zoom: 1 },
-        { t: 3.5, x: 0.6, zoom: 1.15 },
-      ],
-      transitionOut: "zoomPunch",
+      kind: "graphic",
+      scene: "phoneAccount",
+      dur: 3.0,
+      push: true,
+      props: { width: 420, cards: [{ label: "Cent Account", value: 1000 }] },
     },
-    {
-      src: "footage/contoh/A002.mp4",
-      in: 10.0,
-      out: 14.0,
-      autoDrift: true,
-      transitionOut: "whip",
-    },
-    {
-      src: "footage/contoh/A003.mp4",
-      // footage vertikal 4K
-      sourceWidth: 2160,
-      sourceHeight: 3840,
-      in: 0,
-      out: 5,
-    },
+    // Kembali ke talking head (lebar), lalu rapat lagi
+    { kind: "video", src: "footage/contoh/A001.mp4", in: 14.0, out: 17.5 },
+    { kind: "video", src: "footage/contoh/A001.mp4", in: 17.5, out: 21.0 },
   ],
   overlays: [
-    { type: "title", at: 0.2, dur: 2.6, text: "Judul Video Anda", subtitle: "subjudul singkat", accentWords: ["video"] },
-    { type: "lowerThird", at: 4.5, dur: 3, name: "Nama Narasumber", role: "Keterangan" },
-    // { type: "sfx", at: 4.2, src: "sfx/whoosh.mp3", volume: 0.6 },
-    // { type: "logo", at: 0, dur: 13, src: "brand/logo.png" },
+    {
+      type: "text",
+      at: 0,
+      dur: 1.6,
+      x: 125,
+      y: 165,
+      lines: [
+        { text: "Step #2", size: "title", weight: "regular", serif: true, in: "none" },
+        { text: "{Paham} Karakteristik", size: "m", weight: "heavy", in: "none" },
+        { text: "XAUUSD", size: "m", weight: "heavy", in: "none" },
+      ],
+    },
+    {
+      type: "text",
+      at: 1.6,
+      dur: 5.4,
+      x: 530,
+      y: 640,
+      lines: [
+        { text: "XAUUSD", size: "ml", weight: "heavy" },
+        { text: "butuh", size: "l", weight: "black", delay: 0 },
+        { text: "ruang gerak", size: "s", weight: "heavy", delay: 0 },
+      ],
+    },
+    {
+      type: "text",
+      at: 4.0,
+      dur: 3.0,
+      x: 105,
+      y: 1130,
+      lines: [
+        { text: "Paling kecil", size: "l", weight: "bold", in: "type" },
+        { text: "SL (-70 Pips)", size: "ml", weight: "bold", in: "type", delay: 0.6 },
+      ],
+    },
+    // { type: "sfx", at: 7.0, src: "sfx/whoosh.mp3", volume: 0.5 },
   ],
-  captions: [
-    { text: "Ini", startMs: 8000, endMs: 8250 },
-    { text: "contoh", startMs: 8250, endMs: 8600 },
-    { text: "caption", startMs: 8600, endMs: 9000 },
-    { text: "per", startMs: 9100, endMs: 9300 },
-    { text: "kata", startMs: 9300, endMs: 9700 },
-  ],
-  // music: { src: "music/track.mp3", volume: 0.2 },
+  // music: { src: "music/track.mp3", volume: 0.15 },
 };

@@ -1,43 +1,44 @@
 /**
  * Pemuatan font.
  *
- * - Font Google: impor dari @remotion/google-fonts/<NamaFont>.
- * - Font brand sendiri (.ttf/.otf/.woff2): taruh di public/brand/fonts/
- *   lalu daftarkan di LOCAL_FONTS di bawah.
+ * Style asli memakai Gilroy (font komersial, tidak ada di Google Fonts).
+ * - Jika Anda punya lisensinya: taruh file di public/brand/fonts/ dengan nama
+ *   persis seperti di GILROY_FILES lalu ubah USE_GILROY menjadi true.
+ * - Jika tidak: Outfit (Google Font) dipakai sebagai pengganti terdekat.
  */
 import { continueRender, delayRender, staticFile } from "remotion";
-import { loadFont as loadMontserrat } from "@remotion/google-fonts/Montserrat";
-import { loadFont as loadInter } from "@remotion/google-fonts/Inter";
+import { loadFont as loadOutfit } from "@remotion/google-fonts/Outfit";
+import { loadFont as loadNotoSerif } from "@remotion/google-fonts/NotoSerif";
 
-loadMontserrat("normal", { weights: ["500", "700", "800", "900"], subsets: ["latin"] });
-loadInter("normal", { weights: ["400", "500", "700", "900"], subsets: ["latin"] });
+loadOutfit("normal", { weights: ["300", "400", "700", "800", "900"], subsets: ["latin"] });
+loadNotoSerif("normal", { weights: ["400"], subsets: ["latin"] });
 
-type LocalFont = { family: string; file: string; weight?: string; style?: string };
+export const USE_GILROY = false;
 
-/** Contoh: { family: "BrandSans", file: "brand/fonts/BrandSans-Black.otf", weight: "900" } */
-export const LOCAL_FONTS: LocalFont[] = [];
+const GILROY_FILES: { file: string; weight: string }[] = [
+  { file: "brand/fonts/Gilroy-Light.otf", weight: "300" },
+  { file: "brand/fonts/Gilroy-Regular.otf", weight: "400" },
+  { file: "brand/fonts/Gilroy-Bold.otf", weight: "700" },
+  { file: "brand/fonts/Gilroy-ExtraBold.otf", weight: "800" },
+  { file: "brand/fonts/Gilroy-Black.otf", weight: "900" },
+];
 
-let localLoaded = false;
-export const loadLocalFonts = () => {
-  if (localLoaded || LOCAL_FONTS.length === 0 || typeof document === "undefined") return;
-  localLoaded = true;
-  const handle = delayRender("Memuat font lokal");
+let loaded = false;
+const loadGilroy = () => {
+  if (!USE_GILROY || loaded || typeof document === "undefined") return;
+  loaded = true;
+  const handle = delayRender("Memuat Gilroy");
   Promise.all(
-    LOCAL_FONTS.map((f) => {
-      const face = new FontFace(f.family, `url(${staticFile(f.file)})`, {
-        weight: f.weight ?? "normal",
-        style: f.style ?? "normal",
-      });
-      return face.load().then((loaded) => {
-        document.fonts.add(loaded);
-      });
-    })
+    GILROY_FILES.map(({ file, weight }) =>
+      new FontFace("Gilroy", `url(${staticFile(file)})`, { weight })
+        .load()
+        .then((f) => {
+          document.fonts.add(f);
+        })
+    )
   )
-    .then(() => continueRender(handle))
-    .catch((err) => {
-      console.error("Gagal memuat font lokal", err);
-      continueRender(handle);
-    });
+    .catch((err) => console.error("Gilroy gagal dimuat, memakai Outfit", err))
+    .finally(() => continueRender(handle));
 };
 
-loadLocalFonts();
+loadGilroy();

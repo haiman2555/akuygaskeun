@@ -1,77 +1,76 @@
 # CLAUDE.md — panduan untuk Claude Code di repo ini
 
-Repo ini adalah studio motion editing berbasis **Remotion** untuk video
-**portrait 1080x1920 @30fps** dari **footage 4K**. Pengguna berbicara
-Bahasa Indonesia; balas dalam Bahasa Indonesia.
+Studio motion editing berbasis **Remotion** untuk video **portrait 1080×1920
+@25fps** dari **footage 4K**, dengan style milik pengguna (konten edukasi
+trading). Pengguna berbahasa Indonesia; balas dalam Bahasa Indonesia.
 
-## Peta repo
+**Sebelum mengerjakan apa pun, baca `style/STYLE.md`.**
 
-| Path | Isi |
-|---|---|
-| `src/style/tokens.ts` | **Sumber tunggal style**: warna, font, ukuran teks, spring, durasi, varian default. |
-| `src/style/fonts.ts` | Pemuatan font (Google Fonts + font brand lokal di `public/brand/fonts/`). |
-| `style/STYLE.md` | Deskripsi style dalam kata-kata + aturan penempatan. Selalu sinkron dengan `tokens.ts`. |
-| `style/references/` | Video referensi, screenshot penempatan, brand kit, file project dari pengguna. |
-| `src/lib/safe-zones.ts` | Safe zone UI TikTok/Reels/Shorts dan slot posisi (`titleTop`, `center`, `captionCenter`, `lowerThird`). |
-| `src/components/` | Komponen motion: `footage/ReframedVideo`, `text/AnimatedTitle`, `text/WordCaptions`, `overlay/LowerThird`, `overlay/ProgressBar`, `overlay/LogoBug`, `transitions/presets`. |
-| `src/schema/edit.ts` | Tipe `Edit` — deskripsi satu video (klip, overlay, caption, musik). |
-| `src/projects/<slug>/edit.ts` | **Satu file per video.** Di sinilah pekerjaan editing sehari-hari terjadi. |
-| `src/projects/index.ts` | Registrasi project → otomatis jadi komposisi dengan id = slug. |
-| `public/footage/<slug>/` | Footage asli 4K (tidak di-commit). |
-| `public/proxies/<slug>/` | Proxy hasil `npm run proxies` (tidak di-commit). |
-| `public/music`, `public/sfx`, `public/brand` | Audio & aset brand. |
+## Struktur
+
+```
+src/style/        tokens.ts (SATU-SATUNYA sumber style), fonts.ts
+src/components/
+  zoom/           ReframedVideo (footage 4K → 9:16), ZoomLayer, useZoom (base/punch/push/keyframe)
+  cuts/           transitions.tsx (cut, dip, panDown, panUp, slideLeft, fade)
+  motion/text/    StackText — semua teks bertumpuk (box, strike, flicker, type, words)
+  motion/graphic/ GraphicBg/Shade, PhoneMockup, AccountCard/TradeRows, IconPop, DrawPath
+  motion/broll/   ImageBroll (foto + gerak kamera + vignette)
+  captions/       WordCaptions (opsional)
+src/scenes/       scene grafis siap pakai (phoneAccount, icon, placeholder, blank) + registry
+src/schema/       edit.ts — tipe Edit (klip video/image/graphic + overlay)
+src/compositions/ EditTimeline (render Edit), styleboard.ts (rekonstruksi referensi)
+src/projects/     <slug>/edit.ts — SATU FILE PER VIDEO
+style/            STYLE.md, references/ (video referensi, screenshot, brand kit)
+public/           footage/<slug>/, proxies/, assets/, brand/, music/, sfx/
+```
 
 ## Aturan kerja
 
-1. **Edit video = edit `src/projects/<slug>/edit.ts`.** Jangan menyalin/memodifikasi
-   komponen hanya untuk satu video. Jika butuh perilaku baru, tambahkan prop/varian
-   di komponen lalu pakai dari `edit.ts`.
-2. **Style hanya dari `tokens.ts`.** Jangan menulis warna, font, atau ukuran secara
-   hardcode di komponen atau project. Kalau pengguna minta "ubah style", ubah tokens
-   lalu perbarui `style/STYLE.md`.
-3. **Semua teks & grafis di dalam safe zone** (`src/lib/safe-zones.ts`). Gunakan slot
-   yang ada; tambahkan slot baru di sana bila screenshot penempatan pengguna meminta.
-4. **Waktu di `edit.ts` dalam detik**, caption dalam milidetik relatif ke timeline hasil edit.
-5. Sebelum mengisi `in/out` dan `sourceWidth/sourceHeight`, jalankan `npm run probe <slug>`.
-   Footage vertikal 4K = `2160x3840`; landscape 4K = `3840x2160` (default).
-   Perhatikan kolom ROTASI: footage HP dengan rotasi 90/-90 berarti orientasi tertukar.
-6. Setelah perubahan kode, jalankan `npm run typecheck`. Untuk cek visual tanpa render
-   penuh: `npx remotion still <id> out/cek.png --frame=<n>` lalu buka gambarnya.
-7. Jangan commit footage, proxy, atau `out/`.
+1. **Edit video = edit `src/projects/<slug>/edit.ts`.** Komponen hanya diubah bila
+   butuh kemampuan baru, dan perubahan itu harus berlaku umum.
+2. **Style hanya dari `tokens.ts`.** Jangan hardcode warna/ukuran/durasi. Ubah token
+   → perbarui `style/STYLE.md` → cek StyleBoard.
+3. **Ikuti pola referensi**:
+   - Talking head: jump cut selang-seling lebar/rapat (otomatis lewat `alternateFraming`),
+     punch-in saat cut ke rapat (otomatis lewat `autoPunch`).
+   - Teks kunci = overlay `text` dengan `lines` bertumpuk berbobot campur, muncul tepat
+     saat kata diucapkan. Satu aksen per frame (kotak/coret merah ATAU kuning).
+   - Scene grafis: latar `GraphicBg`, `push: true`, transisi `dip`/`panDown` antar grafis.
+4. **Semua waktu di `edit.ts` dalam detik** (klip, overlay, delay baris, props scene);
+   caption dalam milidetik. Posisi teks dalam px kanvas 1080×1920.
+   Gunakan `clipStarts(edit)` untuk tahu detik mulai tiap klip di timeline.
+5. Sebelum mengisi klip: `npm run probe <slug>`. Default sumber = 4K vertikal 2160×3840;
+   landscape isi `sourceWidth: 3840, sourceHeight: 2160`.
+6. Setelah perubahan: `npm run typecheck`, lalu render still di titik penting dan lihat
+   gambarnya (`npx remotion still <id> out/cek.png --frame=<n>`).
+7. Scene grafis baru → buat di `src/scenes/`, daftarkan di `src/scenes/index.ts`,
+   props waktunya dalam detik.
+8. Jangan commit footage, proxy, `out/`, atau video referensi.
 
 ## Perintah
 
 ```bash
 npm install
-npm run studio                       # preview interaktif (pakai .env dengan REMOTION_USE_PROXY=1)
-npm run probe [slug]                 # info resolusi/fps/durasi footage
-npm run proxies [slug]               # buat proxy 1080p untuk preview lancar
-npm run extract-ref                  # pecah video referensi style jadi frame & contact sheet
-npm run new-project <slug>           # buat project baru
+npm run studio                      # preview (cp .env.example .env untuk proxy)
+npm run probe [slug]
+npm run proxies [slug]
+npm run extract-ref                 # pecah video referensi baru jadi frame/contact sheet
+npm run new-project <slug>
 npm run typecheck
-npx remotion still StylePreview out/style.png --frame=30
+npx remotion still StyleBoard out/sb.png --frame=300
 npm run render:draft -- <slug> out/<slug>-draft.mp4
-npm run render:final -- <slug> out/<slug>.mp4
+npm run render:final -- <slug> out/<slug>.mp4   # selalu footage 4K asli (.env.render)
 ```
 
-`render:final` memuat `.env.render` (`REMOTION_USE_PROXY=0`) sehingga selalu memakai
-footage 4K asli, walau `.env` untuk Studio mengaktifkan proxy.
+## Cheat sheet overlay teks
 
-## Alur kerja menurunkan style dari referensi (`/extract-style`)
-
-1. `npm run extract-ref`, lalu lihat `style/references/_extracted/*/sheet.jpg`,
-   `scenes/*.jpg`, dan `frames/*.jpg` (4 fps → hitung frame untuk durasi animasi).
-2. Lihat `style/references/screenshots/` untuk posisi elemen; ukur posisi Y relatif 1920.
-3. Baca brand kit (`style/references/brand-kit/`): warna hex, font, logo.
-4. Tulis temuan ke `style/STYLE.md`, lalu terjemahkan ke `tokens.ts`, `safe-zones.ts`
-   (slot), dan bila perlu varian baru di komponen.
-5. Render `StylePreview` sebagai still di beberapa frame dan bandingkan dengan referensi.
-   Ulangi sampai mirip.
-
-## Alur kerja satu video (`/new-edit`)
-
-1. `npm run new-project <slug>`; pengguna menaruh footage di `public/footage/<slug>/`.
-2. `npm run probe <slug>` → isi klip (in/out, resolusi).
-3. Susun klip, reframe, transisi, overlay, caption, musik di `edit.ts`.
-4. `npm run typecheck`, cek still di titik penting (awal tiap klip, tiap overlay).
-5. Render draft, minta feedback, lalu render final.
+```ts
+{ type: "text", at: 11.4, dur: 2.5, x: 310, y: 445, lines: [
+  { text: "Fokusmu", size: "l", weight: "heavy", in: "flicker", box: true },
+  { text: "Bukan",   size: "m", weight: "light", indent: 150, delay: 0.7 },
+  { text: "Duit",    size: "xl", weight: "black", indent: 170, strike: true, delay: 1.1 },
+]}
+// markup: "{Paham} Karakteristik" = kuning, "Jadi lebih **mengerti**" = black
+// in: "fade" (default) | "flicker" | "type" | "words" | "none"
+```

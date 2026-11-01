@@ -1,15 +1,17 @@
 # motion-studio
 
-Studio motion editing untuk video **portrait 1080×1920** dari **footage 4K**,
+Studio motion editing untuk video **portrait 1080×1920 @25fps** dari **footage 4K**,
 dibangun di atas [Remotion](https://www.remotion.dev) dan disiapkan untuk
 dikendalikan lewat **Claude Code**.
 
-- Satu file style (`src/style/tokens.ts`) mengatur seluruh look.
-- Satu file per video (`src/projects/<slug>/edit.ts`) berisi klip, reframe, transisi, teks, caption, dan audio.
-- Reframe 4K → 9:16 dengan titik fokus & punch-in ber-keyframe.
-- Caption per kata, judul animasi, lower third, progress bar, logo, transisi (zoom punch, whip, slide, wipe, fade).
-- Safe zone TikTok / Reels / Shorts bawaan.
-- Proxy workflow agar preview footage 4K tetap lancar.
+Style diturunkan dari video referensi pengguna (lihat `style/STYLE.md`) dan dibagi tiga:
+
+- **zoom/** — jump cut lebar ↔ rapat otomatis, punch-in dengan blur, slow push, reframe 4K → 9:16.
+- **cuts/** — hard cut, dip to black, pan vertikal, geser horizontal.
+- **motion/** — teks bertumpuk (kotak merah + kedip, coret, ketik per huruf, per kata), mockup HP + kartu saldo + angka bergulir, ikon terbang, anotasi putus-putus, B-roll foto bergerak.
+
+Satu file style (`src/style/tokens.ts`), satu file per video (`src/projects/<slug>/edit.ts`),
+dan **StyleBoard** yang merekonstruksi adegan referensi untuk pembanding.
 
 ## Kebutuhan
 
@@ -23,7 +25,7 @@ dikendalikan lewat **Claude Code**.
 git clone <repo-ini> && cd motion-studio
 npm install
 cp .env.example .env          # preview pakai proxy
-npm run studio                # buka StylePreview untuk melihat style
+npm run studio                # buka StyleBoard untuk melihat style
 ```
 
 ## Pakai dengan Claude Code
@@ -37,11 +39,11 @@ Buka folder repo dengan `claude`. `CLAUDE.md` menjelaskan aturan repo, dan terse
 | `/captions <slug> <transkrip>` | Mengubah transkrip/SRT jadi caption per kata. |
 | `/render <slug> draft\|final` | Render dan verifikasi hasil. |
 
-Contoh: *"/new-edit promo-kopi video 30 detik, hook di 2 detik pertama, lower third untuk barista di klip 3"*.
+Contoh: *"/new-edit xauusd-step3 video 45 detik, hook di 2 detik pertama, teks kunci \"Risk kecil\" dicoret merah di klip 2, scene HP saldo di tengah"*.
 
 ## Alur singkat
 
-1. Taruh materi style di `style/references/` → jalankan `/extract-style`.
+1. Style sudah terpasang. Untuk menambah referensi baru, taruh di `style/references/` → `/extract-style`.
 2. `npm run new-project nama-video`, taruh footage di `public/footage/nama-video/`.
 3. `npm run proxies nama-video` (opsional, untuk preview).
 4. `/new-edit nama-video <brief>` → cek di Studio → revisi.
@@ -52,12 +54,13 @@ Contoh: *"/new-edit promo-kopi video 30 detik, hook di 2 detik pertama, lower th
 ```
 src/
   style/        tokens.ts (style), fonts.ts
-  lib/          safe-zones, timing, media (proxy), text-style
-  components/   footage/ text/ overlay/ transitions/
+  lib/          motion, text-style, media (proxy), safe-zones, timing
+  components/   zoom/ cuts/ motion/{text,graphic,broll}/ captions/
+  scenes/       scene grafis siap pakai + registry
   schema/       edit.ts (tipe Edit)
-  compositions/ EditTimeline (render project), StylePreview
+  compositions/ EditTimeline, styleboard.ts
   projects/     <slug>/edit.ts + index.ts
-public/         footage/ proxies/ brand/ music/ sfx/
+public/         footage/ proxies/ assets/ brand/ music/ sfx/
 style/          STYLE.md, references/
 scripts/        make-proxies, probe, extract-reference, new-project
 .claude/commands/
