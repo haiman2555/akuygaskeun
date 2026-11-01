@@ -7,7 +7,7 @@
  *   "Step #2" (serif glow) / "{Paham} Karakteristik" / "XAUUSD"
  *   "Jadi lebih **mengerti**" / "tentang ilmu market"   (muncul per kata)
  *
- * Markup: {kata} = kuning, **kata** = weight black.
+ * Markup: {kata} = kuning, **kata** = Bold (di baris Book).
  */
 import React from "react";
 import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
@@ -53,7 +53,7 @@ const unitsOf = (line: TextLine, mode: "chars" | "words"): Unit[] => {
   parseMarkup(line.text).forEach((span) => {
     const style = {
       color: span.accent ? colors.yellow : undefined,
-      weight: span.strong ? weights.black : undefined,
+      weight: span.strong ? weights.bold : undefined,
     };
     const parts = mode === "chars" ? Array.from(span.text) : span.text.split(/(\s+)/).filter(Boolean);
     parts.forEach((p) => units.push({ text: p, ...style }));
@@ -105,7 +105,7 @@ const Line: React.FC<{ line: TextLine; start: number; frame: number; fps: number
     });
   } else {
     content = parseMarkup(line.text).map((s, i) => (
-      <span key={i} style={{ color: s.accent ? colors.yellow : undefined, fontWeight: s.strong ? weights.black : undefined }}>
+      <span key={i} style={{ color: s.accent ? colors.yellow : undefined, fontWeight: s.strong ? weights.bold : undefined }}>
         {s.text}
       </span>
     ));

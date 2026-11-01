@@ -1,44 +1,51 @@
 /**
  * Pemuatan font.
  *
- * Style asli memakai Gilroy (font komersial, tidak ada di Google Fonts).
- * - Jika Anda punya lisensinya: taruh file di public/brand/fonts/ dengan nama
- *   persis seperti di GILROY_FILES lalu ubah USE_GILROY menjadi true.
- * - Jika tidak: Outfit (Google Font) dipakai sebagai pengganti terdekat.
+ * Style memakai Campton Book (400) dan Campton Bold (700) — font komersial,
+ * tidak tersedia di Google Fonts. Taruh file Anda di public/brand/fonts/
+ * dengan nama di CAMPTON_FILES (atau ubah daftar di bawah sesuai nama file).
+ * Font dimuat otomatis; bila file belum ada, render tetap jalan dengan
+ * Outfit (Google Font) sebagai pengganti sementara.
  */
 import { continueRender, delayRender, staticFile } from "remotion";
 import { loadFont as loadOutfit } from "@remotion/google-fonts/Outfit";
 import { loadFont as loadNotoSerif } from "@remotion/google-fonts/NotoSerif";
 
-loadOutfit("normal", { weights: ["300", "400", "700", "800", "900"], subsets: ["latin"] });
+loadOutfit("normal", { weights: ["400", "700"], subsets: ["latin"] });
 loadNotoSerif("normal", { weights: ["400"], subsets: ["latin"] });
 
-export const USE_GILROY = false;
-
-const GILROY_FILES: { file: string; weight: string }[] = [
-  { file: "brand/fonts/Gilroy-Light.otf", weight: "300" },
-  { file: "brand/fonts/Gilroy-Regular.otf", weight: "400" },
-  { file: "brand/fonts/Gilroy-Bold.otf", weight: "700" },
-  { file: "brand/fonts/Gilroy-ExtraBold.otf", weight: "800" },
-  { file: "brand/fonts/Gilroy-Black.otf", weight: "900" },
+/** Kandidat per bobot; yang pertama berhasil dimuat yang dipakai. */
+export const CAMPTON_FILES: { weight: "400" | "700"; files: string[] }[] = [
+  {
+    weight: "400",
+    files: ["brand/fonts/Campton-Book.otf", "brand/fonts/CamptonBook.otf", "brand/fonts/Campton-Book.ttf", "brand/fonts/CamptonBook.ttf"],
+  },
+  {
+    weight: "700",
+    files: ["brand/fonts/Campton-Bold.otf", "brand/fonts/CamptonBold.otf", "brand/fonts/Campton-Bold.ttf", "brand/fonts/CamptonBold.ttf"],
+  },
 ];
 
-let loaded = false;
-const loadGilroy = () => {
-  if (!USE_GILROY || loaded || typeof document === "undefined") return;
-  loaded = true;
-  const handle = delayRender("Memuat Gilroy");
-  Promise.all(
-    GILROY_FILES.map(({ file, weight }) =>
-      new FontFace("Gilroy", `url(${staticFile(file)})`, { weight })
-        .load()
-        .then((f) => {
-          document.fonts.add(f);
-        })
-    )
-  )
-    .catch((err) => console.error("Gilroy gagal dimuat, memakai Outfit", err))
-    .finally(() => continueRender(handle));
+const loadFirst = async (weight: string, files: string[]) => {
+  for (const file of files) {
+    try {
+      const face = await new FontFace("Campton", `url(${staticFile(file)})`, { weight }).load();
+      document.fonts.add(face);
+      return true;
+    } catch {
+      // coba nama file berikutnya
+    }
+  }
+  console.warn(`Campton ${weight} tidak ditemukan di public/brand/fonts — memakai Outfit.`);
+  return false;
 };
 
-loadGilroy();
+let started = false;
+const loadCampton = () => {
+  if (started || typeof document === "undefined") return;
+  started = true;
+  const handle = delayRender("Memuat Campton");
+  Promise.all(CAMPTON_FILES.map(({ weight, files }) => loadFirst(weight, files))).finally(() => continueRender(handle));
+};
+
+loadCampton();

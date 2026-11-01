@@ -54,7 +54,7 @@ export const WordCaptions: React.FC<{ words: CaptionWord[]; y?: number; wordsPer
           filter: p < 1 ? `blur(${(1 - p) * motion.lineBlur}px)` : undefined,
         }}
       >
-        <span style={{ ...textStyle("m", "heavy"), whiteSpace: "normal" }}>
+        <span style={{ ...textStyle("m", "bold"), whiteSpace: "normal" }}>
           {page.words.map((w, i) => (
             <span key={i} style={{ color: nowMs >= w.startMs && nowMs < w.endMs + 60 ? colors.yellow : colors.white }}>
               {w.text}{" "}

@@ -37,9 +37,9 @@ export const edit: Edit = {
       x: 125,
       y: 165,
       lines: [
-        { text: "Step #2", size: "title", weight: "regular", serif: true, in: "none" },
-        { text: "{Paham} Karakteristik", size: "m", weight: "heavy", in: "none" },
-        { text: "XAUUSD", size: "m", weight: "heavy", in: "none" },
+        { text: "Step #2", size: "title", weight: "book", serif: true, in: "none" },
+        { text: "{Paham} Karakteristik", size: "m", weight: "bold", in: "none" },
+        { text: "XAUUSD", size: "m", weight: "bold", in: "none" },
       ],
     },
     {
@@ -49,9 +49,9 @@ export const edit: Edit = {
       x: 530,
       y: 640,
       lines: [
-        { text: "XAUUSD", size: "ml", weight: "heavy" },
-        { text: "butuh", size: "l", weight: "black", delay: 0 },
-        { text: "ruang gerak", size: "s", weight: "heavy", delay: 0 },
+        { text: "XAUUSD", size: "ml", weight: "bold" },
+        { text: "butuh", size: "l", weight: "bold", delay: 0 },
+        { text: "ruang gerak", size: "s", weight: "bold", delay: 0 },
       ],
     },
     {

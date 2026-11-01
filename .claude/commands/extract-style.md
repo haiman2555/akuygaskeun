@@ -10,7 +10,7 @@ Tugas: buat style repo ini semirip mungkin dengan referensi pengguna. $ARGUMENTS
    animasi masuk/keluar, stagger kata, dan jenis transisi.
 3. Dari screenshot, ukur posisi Y tiap elemen dalam skala 1080x1920 dan rata kiri/tengah.
 4. Dari brand kit: warna hex, font (salin file font ke `public/brand/fonts/` dan
-   atur `GILROY_FILES` + `USE_GILROY` di `src/style/fonts.ts`),
+   sesuaikan `CAMPTON_FILES` di `src/style/fonts.ts`),
    logo ke `public/brand/`.
 5. Dari file project (.aep/.prproj/.mogrt), ambil nilai yang terbaca (durasi, posisi,
    ukuran font, warna) sebagai acuan.

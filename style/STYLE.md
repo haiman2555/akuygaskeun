@@ -21,7 +21,9 @@
 | Kartu saldo | `#2F0000` → `#DA0001` | gradien diagonal |
 
 ## 3. Tipografi
-- **Gilroy** (Light / Regular / Bold / ExtraBold / Black). Pengganti gratis: **Outfit**.
+- **Campton Book** dan **Campton Bold** — hanya dua bobot ini (`weight: "book" | "bold"`).
+- **Tracking −14** (1/1000 em, seperti di After Effects/Premiere) = `letter-spacing: -0.014em`, berlaku untuk semua teks Campton.
+- File font: `public/brand/fonts/Campton-Book.otf` & `Campton-Bold.otf` (dimuat otomatis). Bila belum ada, pengganti sementara: **Outfit**.
 - Serif untuk judul step ("Step #2") dengan glow putih — pengganti: Noto Serif.
 - Pola khas: **tumpukan teks dengan bobot & ukuran campur**, leading rapat (0,92).
 
@@ -72,7 +74,7 @@
 | Angka | bergulir 8 fr ($1000 → $999) |
 
 ## 8. Belum ada di referensi / perlu konfirmasi
-- File font Gilroy (bila punya lisensi) → `public/brand/fonts/`, set `USE_GILROY = true`.
+- File font Campton Book & Bold → `public/brand/fonts/` (belum ada di repo).
 - Aset ikon asli (otak "!?", lampu, papan gabus) → `public/assets/`.
 - SFX (whoosh, pop) & musik: belum terdengar dianalisis.
 - Caption per kata: tidak dipakai di referensi; komponen tetap tersedia.

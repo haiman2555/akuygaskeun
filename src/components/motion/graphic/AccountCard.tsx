@@ -1,7 +1,7 @@
 import React from "react";
 import { interpolate, useCurrentFrame } from "remotion";
 import { easeOut } from "../../../lib/motion";
-import { colors, fonts, motion, weights } from "../../../style/tokens";
+import { colors, fonts, motion, text, weights } from "../../../style/tokens";
 
 /** Angka yang bergulir dari `from` ke `to` mulai frame `at`. */
 export const useRoll = (from: number, to: number, at: number, frames = motion.numberRollFrames) => {
@@ -46,14 +46,15 @@ export const AccountCard: React.FC<{
         padding: `0 ${u * 7}px`,
         boxSizing: "border-box",
         fontFamily: fonts.sans,
+        letterSpacing: text.tracking,
         color: colors.white,
       }}
     >
       <PersonIcon size={u * 30} />
       <div style={{ lineHeight: 1.1 }}>
-        <div style={{ fontSize: u * 5.4, fontWeight: weights.regular }}>{label}</div>
+        <div style={{ fontSize: u * 5.4, fontWeight: weights.book }}>{label}</div>
         <div style={{ fontSize: u * 7.2, fontWeight: weights.bold }}>Balance:</div>
-        <div style={{ fontSize: u * 11, fontWeight: weights.heavy }}>
+        <div style={{ fontSize: u * 11, fontWeight: weights.bold }}>
           {prefix}
           {shown}
         </div>
@@ -71,7 +72,7 @@ export const TradeRows: React.FC<{
   const frame = useCurrentFrame();
   const u = width / 100;
   return (
-    <div style={{ width, fontFamily: fonts.sans, display: "flex", flexDirection: "column", gap: u * 4 }}>
+    <div style={{ width, fontFamily: fonts.sans, letterSpacing: text.tracking, display: "flex", flexDirection: "column", gap: u * 4 }}>
       {rows.map((r, i) => {
         const p = interpolate(frame, [at + i * 3, at + i * 3 + 5], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
         return (
@@ -86,11 +87,11 @@ export const TradeRows: React.FC<{
               transform: `translateX(${(1 - p) * -20}px)`,
             }}
           >
-            <span style={{ color: colors.white, fontSize: u * 7, fontWeight: weights.regular }}>{r.symbol}</span>
+            <span style={{ color: colors.white, fontSize: u * 7, fontWeight: weights.book }}>{r.symbol}</span>
             <span style={{ color: colors.redBright, fontSize: u * 4, fontWeight: weights.bold, marginLeft: u * 2, flex: 1 }}>
               {r.note ?? ""}
             </span>
-            <span style={{ color: colors.redBright, fontSize: u * 7, fontWeight: weights.regular }}>{r.value}</span>
+            <span style={{ color: colors.redBright, fontSize: u * 7, fontWeight: weights.book }}>{r.value}</span>
           </div>
         );
       })}

@@ -86,9 +86,9 @@ const overlays: Overlay[] = [
     x: 655,
     y: 880,
     lines: [
-      { text: "“Resiko **100x lebih**", size: "sm", weight: "regular", in: "words" },
-      { text: "**rendah** daripada", size: "sm", weight: "regular", in: "words", delay: 0.3 },
-      { text: "akun standar”", size: "sm", weight: "regular", in: "words", delay: 0.55 },
+      { text: "“Resiko **100x lebih**", size: "sm", weight: "book", in: "words" },
+      { text: "**rendah** daripada", size: "sm", weight: "book", in: "words", delay: 0.3 },
+      { text: "akun standar”", size: "sm", weight: "book", in: "words", delay: 0.55 },
     ],
   },
   // Fokusmu / Bukan / Duit
@@ -99,9 +99,9 @@ const overlays: Overlay[] = [
     x: 310,
     y: 445,
     lines: [
-      { text: "Fokusmu", size: "l", weight: "heavy", in: "flicker", box: true },
-      { text: "Bukan", size: "m", weight: "light", indent: 150, delay: 0.7 },
-      { text: "Duit", size: "xl", weight: "black", indent: 170, strike: true, delay: 1.1 },
+      { text: "Fokusmu", size: "l", weight: "bold", in: "flicker", box: true },
+      { text: "Bukan", size: "m", weight: "book", indent: 150, delay: 0.7 },
+      { text: "Duit", size: "xl", weight: "bold", indent: 170, strike: true, delay: 1.1 },
     ],
   },
   // Jadi lebih mengerti
@@ -113,7 +113,7 @@ const overlays: Overlay[] = [
     y: 470,
     align: "center",
     lines: [
-      { text: "Jadi lebih **mengerti**", size: "m", weight: "regular", in: "words" },
+      { text: "Jadi lebih **mengerti**", size: "m", weight: "book", in: "words" },
       { text: "tentang ilmu market", size: "sm", weight: "bold", in: "words", delay: 0.4 },
     ],
   },
@@ -125,9 +125,9 @@ const overlays: Overlay[] = [
     x: 125,
     y: 165,
     lines: [
-      { text: "Step #2", size: "title", weight: "regular", serif: true, in: "none" },
-      { text: "{Paham} Karakteristik", size: "m", weight: "heavy", in: "none" },
-      { text: "XAUUSD", size: "m", weight: "heavy", in: "none" },
+      { text: "Step #2", size: "title", weight: "book", serif: true, in: "none" },
+      { text: "{Paham} Karakteristik", size: "m", weight: "bold", in: "none" },
+      { text: "XAUUSD", size: "m", weight: "bold", in: "none" },
     ],
   },
   // XAUUSD butuh ruang gerak
@@ -138,9 +138,9 @@ const overlays: Overlay[] = [
     x: 530,
     y: 640,
     lines: [
-      { text: "XAUUSD", size: "ml", weight: "heavy" },
-      { text: "butuh", size: "l", weight: "black", delay: 0 },
-      { text: "ruang gerak", size: "s", weight: "heavy", delay: 0 },
+      { text: "XAUUSD", size: "ml", weight: "bold" },
+      { text: "butuh", size: "l", weight: "bold", delay: 0 },
+      { text: "ruang gerak", size: "s", weight: "bold", delay: 0 },
     ],
   },
   { type: "path", at: at(8, 0.9), dur: 2.9, d: "M 905 830 C 975 905, 975 1040, 790 1105", color: "red", dashed: true },

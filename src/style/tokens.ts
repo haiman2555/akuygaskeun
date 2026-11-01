@@ -33,18 +33,16 @@ export const colors = {
 
 /* ------------------------------------------------------------------ font */
 export const fonts = {
-  // Gilroy dipakai bila filenya ada di public/brand/fonts (lihat fonts.ts),
-  // jika tidak, jatuh ke Outfit (Google Font paling mirip).
-  sans: "Gilroy, Outfit, sans-serif",
+  // Campton (Book + Bold) dipakai bila filenya ada di public/brand/fonts
+  // (lihat fonts.ts); jika tidak, jatuh ke Outfit (Google Font paling mirip).
+  sans: "Campton, Outfit, sans-serif",
   serif: "'Noto Serif', Georgia, serif", // judul "Step #2"
 } as const;
 
+/** Hanya dua bobot, sesuai style: Campton Book & Campton Bold. */
 export const weights = {
-  light: 300,
-  regular: 400,
+  book: 400,
   bold: 700,
-  heavy: 800,
-  black: 900,
 } as const;
 
 /** Ukuran teks dalam px pada kanvas 1080 lebar (diukur dari referensi). */
@@ -62,6 +60,7 @@ export type SizeKey = keyof typeof sizes;
 
 export const text = {
   lineHeight: 0.92, // tumpukan teks rapat
+  tracking: "-0.014em", // tracking -14 (satuan 1/1000 em, seperti di AE/Premiere)
   shadow: "0 4px 18px rgba(0,0,0,0.55)",
   glow: "0 0 22px rgba(255,255,255,0.45)", // serif title
   boxPadX: 0.28, // em, padding kotak merah

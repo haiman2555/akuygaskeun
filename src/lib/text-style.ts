@@ -17,7 +17,7 @@ export const textStyle = (
   fontSize: sizes[size],
   fontWeight: weights[weight],
   lineHeight: text.lineHeight,
-  letterSpacing: opts.serif ? 0 : "-0.01em",
+  letterSpacing: opts.serif ? 0 : text.tracking,
   color: colorOf(opts.color),
   textShadow: opts.serif ? `${text.glow}, ${text.shadow}` : text.shadow,
   whiteSpace: "pre",
@@ -26,7 +26,7 @@ export const textStyle = (
 /**
  * Markup inline di teks:
  *   {kata}    -> warna aksen kuning   ("{Paham} Karakteristik")
- *   **kata**  -> naik ke weight black  ("Jadi lebih **mengerti**")
+ *   **kata**  -> Campton Bold di baris Book ("Jadi lebih **mengerti**")
  */
 export type Span = { text: string; accent: boolean; strong: boolean };
 export const parseMarkup = (s: string): Span[] => {

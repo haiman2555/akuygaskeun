@@ -9,7 +9,7 @@ trading). Pengguna berbahasa Indonesia; balas dalam Bahasa Indonesia.
 ## Struktur
 
 ```
-src/style/        tokens.ts (SATU-SATUNYA sumber style), fonts.ts
+src/style/        tokens.ts (SATU-SATUNYA sumber style), fonts.ts (Campton Book/Bold, tracking -14)
 src/components/
   zoom/           ReframedVideo (footage 4K → 9:16), ZoomLayer, useZoom (base/punch/push/keyframe)
   cuts/           transitions.tsx (cut, dip, panDown, panUp, slideLeft, fade)
@@ -67,10 +67,11 @@ npm run render:final -- <slug> out/<slug>.mp4   # selalu footage 4K asli (.env.r
 
 ```ts
 { type: "text", at: 11.4, dur: 2.5, x: 310, y: 445, lines: [
-  { text: "Fokusmu", size: "l", weight: "heavy", in: "flicker", box: true },
-  { text: "Bukan",   size: "m", weight: "light", indent: 150, delay: 0.7 },
-  { text: "Duit",    size: "xl", weight: "black", indent: 170, strike: true, delay: 1.1 },
+  { text: "Fokusmu", size: "l", weight: "bold", in: "flicker", box: true },
+  { text: "Bukan",   size: "m", weight: "book",  indent: 150, delay: 0.7 },
+  { text: "Duit",    size: "xl", weight: "bold", indent: 170, strike: true, delay: 1.1 },
 ]}
-// markup: "{Paham} Karakteristik" = kuning, "Jadi lebih **mengerti**" = black
+// weight: "book" (Campton Book) | "bold" (Campton Bold) — hanya dua bobot ini
+// markup: "{Paham} Karakteristik" = kuning, "Jadi lebih **mengerti**" = Bold di baris Book
 // in: "fade" (default) | "flicker" | "type" | "words" | "none"
 ```
