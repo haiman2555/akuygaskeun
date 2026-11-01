@@ -1,0 +1,13 @@
+node_modules/
+out/
+.env
+
+# footage & media berat
+public/footage/*/*
+!public/footage/*/.gitkeep
+public/proxies/
+style/references/_extracted/
+style/references/videos/*
+!style/references/videos/.gitkeep
+*.aep.bak
+.DS_Store
